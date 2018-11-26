@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+<script>
+window.onload = function() {myFunction(); getyears();};//runs to functions when the window loads
+
+function getyears(){//at start get years to fill dropdown box
+  $.ajax({
+          type: 'GET',
+          url: '/years/',
+          //data: {param: xyz}, //passing some input here
+          dataType: "json",
+          success: function(response){
+             //map.updateChoropleth({try1: 'green'}, {reset: true})
+             for(var iter = 0; iter < Object.keys(response).length; iter++){
+               $('#yearlist').append($('<option>',
+             {
+              value: response[iter],
+              text : response[iter]
+              }));
+             }
+             //output = response;
+             //alert(output);
+          },
+          error: function(){
+            alert('fail');
+          }
+  }).done(function(data){
+      //console.log(data);
+      //alert(data);
+  });
+}
+
+function myFunction(year = 1944){//gets information to display on map
+url1 = '/data/'+year
+$.ajax({
+        type: 'GET',
+        url: url1,
+        //data: {param: xyz}, //passing some input here
+        dataType: "json",
+        success: function(response){
+           //map.updateChoropleth({try1: 'green'}, {reset: true})
+           fixthislater(response);
+           output = response;
+           //alert(output);
+        },
+        error: function(){
+          alert('something has gone wrong when retrieving this information');
+        }
+}).done(function(data){
+    //console.log(data);
+    //alert(data);
+});
+}
+
+</script>
+<meta charset="utf-8">
+<body>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://d3js.org/topojson.v1.min.js"></script>
+  <!-- I recommend you host this file on your own, since this will change without warning -->
+  <script src="{{
+    url_for('static', filename='datamaps.all.min.js')}}"></script>
+  <h2>Presidential Election Map</h2>
+  <p>Map for year:</p> <select id = 'yearlist' onchange="myFunction(this.value);">
+  </select>
+  <center>
+    <p id = 'candidates'></p>
+    <p>Blue: Democratic win, Red: Republican win, Green: independent win, yellow: no info<p>
+  </center>
+  <div id="container1" style="position: relative; width: 80%; max-height: 500px;"></div>
+
+
+     <script>
+       //set up datamap
+      var map = new Datamap({
+        scope: 'usa',
+        element: document.getElementById('container1'),
+        projection: 'mercator',
+        height: 500,
+        fills: {
+          defaultFill: '#f0af0a',
+          lt50: 'rgba(0,244,244,0.9)',
+          gt50: 'red'
+        }
+      })
+
+     </script>
+</body>
+<script>
+function fixthislater(dt){ //this function changes colors on the state map to the correct collors for the years
+  //I was hoping to do this in one line using a variable where stateinitials is a variable map.updateChoropleth({stateinitials: color}) however it didn't work and the project was based more around using python
+  map.updateChoropleth(null,{reset: true})
+  //alert(dt[Object.keys(dt).length-1]['dem']);
+  document.getElementById('candidates').innerHTML = ('Democratic nominee: ' + dt[Object.keys(dt).length-1]['dem'] + ' and Republican Nominne: ' + dt[Object.keys(dt).length-1]['rep']);
+  for(var iter = 0; iter < Object.keys(dt).length; iter++){
+    color = 'blue';
+    if(dt[iter]['repvote'] > dt[iter]['demvote']){color = 'Red';}
+    if(dt[iter]['indwin'] == 1){color = 'green';}
+    switch (dt[iter]['initials']) {
+      case 'AL':
+         map.updateChoropleth({AL: color})
+        break;
+      case 'AZ':
+         map.updateChoropleth({AZ: color})
+        break;
+      case 'AR':
+         map.updateChoropleth({AR: color})
+        break;
+      case 'CA':
+        map.updateChoropleth({CA: color})
+        break;
+      case 'CO':
+        map.updateChoropleth({CO: color})
+        break;
+      case 'CT':
+        map.updateChoropleth({CT: color})
+        break;
+      case 'DE':
+        map.updateChoropleth({DE: color})
+        break;
+      case 'FL':
+         map.updateChoropleth({FL: color})
+        break;
+      case 'GA':
+         map.updateChoropleth({GA: color})
+        break;
+      case 'ID':
+        map.updateChoropleth({ID: color})
+        break;
+      case 'IL':
+        map.updateChoropleth({IL: color})
+        break;
+      case 'IA':
+        map.updateChoropleth({IA: color})
+        break;
+      case 'IN':
+        map.updateChoropleth({IN: color})
+        break;
+      case 'KS':
+        map.updateChoropleth({KS: color})
+        break;
+      case 'KY':
+        map.updateChoropleth({KY: color})
+        break;
+      case 'LA':
+        map.updateChoropleth({LA: color})
+        break;
+      case 'ME':
+        map.updateChoropleth({ME: color})
+        break;
+      case 'MD':
+        map.updateChoropleth({MD: color})
+        break;
+      case 'MA':
+        map.updateChoropleth({MA: color})
+        break;
+      case 'MI':
+        map.updateChoropleth({MI: color})
+        break;
+      case 'MN':
+        map.updateChoropleth({MN: color})
+        break;
+      case 'MS':
+        map.updateChoropleth({MS: color})
+        break;
+      case 'MO':
+        map.updateChoropleth({MO: color})
+        break;
+      case 'MT':
+        map.updateChoropleth({MT: color})
+        break;
+      case 'NE':
+        map.updateChoropleth({NE: color})
+        break;
+      case 'NV':
+        map.updateChoropleth({NV: color})
+        break;
+      case 'NH':
+        map.updateChoropleth({NH: color})
+        break;
+      case 'NJ':
+        map.updateChoropleth({NJ: color})
+        break;
+      case 'NM':
+        map.updateChoropleth({NM: color})
+        break;
+      case 'NY':
+        map.updateChoropleth({NY: color})
+        break;
+      case 'NC':
+        map.updateChoropleth({NC: color})
+        break;
+      case 'ND':
+        map.updateChoropleth({ND: color})
+        break;
+      case 'OH':
+        map.updateChoropleth({OH: color})
+        break;
+      case 'OK':
+        map.updateChoropleth({OK: color})
+        break;
+      case 'OR':
+        map.updateChoropleth({OR: color})
+        break;
+      case 'PA':
+        map.updateChoropleth({PA: color})
+        break;
+      case 'RI':
+        map.updateChoropleth({RI: color})
+        break;
+      case 'SC':
+        map.updateChoropleth({SC: color})
+        break;
+      case 'SD':
+        map.updateChoropleth({SD: color})
+        break;
+      case 'TN':
+        map.updateChoropleth({TN: color})
+        break;
+      case 'TX':
+        map.updateChoropleth({TX: color})
+        break;
+      case 'UT':
+        map.updateChoropleth({UT: color})
+        break;
+      case 'VT':
+        map.updateChoropleth({VT: color})
+        break;
+      case 'VA':
+        map.updateChoropleth({VA: color})
+        break;
+      case 'WA':
+        map.updateChoropleth({WA: color})
+        break;
+      case 'WV':
+        map.updateChoropleth({WV: color})
+        break;
+      case 'WI':
+        map.updateChoropleth({WI: color})
+        break;
+      case 'WY':
+        map.updateChoropleth({WY: color})
+        break;
+      case 'AK':
+        map.updateChoropleth({AK: color})
+        break;
+      case 'HI':
+        map.updateChoropleth({HI: color})
+        break;
+      default:
+      //alert(dt[iter][dem]);
+
+    //  break;
+    }
+
+  }
+}
+</script>
